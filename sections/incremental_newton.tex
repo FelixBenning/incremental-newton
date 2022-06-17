@@ -1,1 +1,23 @@
 \section{Incremental Newton}
+
+\begin{theorem}
+	\begin{align*}
+		\minimum_{(n+1)}
+		= \minimum_{(n)} - H_{(n+1)}^{-1}\nabla\Loss_{n+1}(\minimum_{(n)})
+	\end{align*}
+\end{theorem}
+\begin{proof}
+	We simply apply Theorem~\ref{thm: convex combination of minima} to get
+	\begin{align*}
+		\minimum_{(n)} - H_{(n+1)}^{-1}\nabla\Loss_{n+1}(\minimum_{(n)})
+		&= \minimum_{(n)} - H_{(n+1)}^{-1}H_{n+1}(\minimum_{(n)} - \minimum_{n+1} )\\
+		&= \underbrace{(\identity - H_{(n+1)}^{-1}H_{n+1})}_{
+			= H_{(n+1)}^{-1}(H_{(n+1)} - H_{n+1})
+		}\minimum_{(n)} + H_{(n+1)}^{-1}H_{n+1}\minimum_{n+1}\\
+		&= H_{(n+1)}^{-1} H_{(n)} \sum_{k=1}^n H_{(n)}^{-1}H_k \minimum_k
+ 		+ H_{(n+1)}^{-1}H_{n+1}\minimum_{n+1}\\
+		&=\sum_{k=1}^{n+1} H_{(n+1)}^{-1}H_k \minimum_k\\
+		&=\minimum_{(n+1)}
+		\qedhere
+	\end{align*}
+\end{proof}

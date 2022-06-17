@@ -1,1 +1,16 @@
 \section{Incremental Newton}
+
+\begin{theorem}
+	\begin{align*}
+		\minimum_{(n+1)}
+		= \minimum_{(n)} - H_{(n+1)}^{-1}\nabla\Loss_{n+1}(\minimum_{(n)})
+	\end{align*}
+\end{theorem}
+\begin{proof}
+	\begin{align*}
+		&\minimum_{(n)} - H_{(n+1)}^{-1}\nabla\Loss_{n+1}(\minimum_{(n)})\\
+		&= \minimum_{(n)} - H_{(n+1)}^{-1}H_{n+1}(\minimum_{n+1} - \minimum_{(n)})\\
+		&= \sum_{k=1}^n [H_{(n)}^{-1} H_k] \minimum_{k} - H_{(n+1)}^{-1}H_{n+1}
+		\left(\minimum_{n+1} - \sum_{k=1}^n [H_{(n)}^{-1} H_k] \minimum_{k}\right)
+	\end{align*}
+\end{proof}

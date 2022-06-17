@@ -1,0 +1,116 @@
+\section{Sums of Quadratic Losses}
+
+For a family of quadratic losses
+\begin{align*}
+	\Loss_k(\theta)
+	= \Loss_k(w)
+	+ \langle\nabla\Loss_k(w), \theta-w\rangle
+	+ \tfrac12\langle H_k(\theta-w), \theta-w\rangle
+\end{align*}
+with \(H_k\) positive definite, we define (with the assumption that the
+limit is well defined)
+\begin{align}\label{eq: loss limit}
+	\Loss(\theta) := \lim_{n\to\infty} \underbrace{\frac1n\sum_{k=1}^n \Loss_k(\theta)}_{=: \Loss_{(n)}(\theta)}.
+\end{align}
+A finite sum would also work. But this is the more interesting case.
+\begin{example}
+	for a random loss \(\loss(w, X,Y)\) with
+	\begin{align*}
+		\Loss(w) := \E[\loss(w, X,Y)],
+	\end{align*}
+	we can sample independent \((X_k,Y_k)_{k\ge 1}\) according to the distribution of
+	\((X,Y)\) and define
+	\begin{align*}
+		\Loss_k(w) := \loss(w, X_k, Y_k).
+	\end{align*}
+	We then get \eqref{eq: loss limit} from the law of large numbers.
+\end{example}
+
+\subsection{Tracking Minimas}
+
+Since every \(\Loss_k\) is convex, as \(H_k\) are positive definite, we
+simply need to satisfy the first order condition to find a minimum.
+\begin{align*}
+	0\overset!= \nabla\Loss_k(\theta)
+	= \nabla\Loss_k(w) + H_k(\theta-w).
+\end{align*}
+If \(H_k\) is strictly positive definite, we get for
+\begin{align*}
+	\minimum_k := w - H_k^{-1}\nabla\Loss_k(w)
+\end{align*}
+the representation
+\begin{align}\label{eq: parabola representation}
+	\Loss_k(\theta) = \Loss_k(\minimum_k) + \tfrac12 \|\theta-\minimum_k\|_{H_k}^2
+\end{align}
+using
+\begin{align*}
+	\|x\|_H^2 := \langle Hx, x\rangle\ge 0.
+\end{align*}
+While \(H_k\) strictly positive definite is a sufficient condition for the
+representation \eqref{eq: parabola representation}, it is not a necessary
+condition.
+\begin{example}
+	We only need to find \(\minimum_k\) for which \(\nabla\Loss_k(\minimum_k)=0\).
+	If we have
+	\begin{align*}
+		\Loss_k(\theta) = (\langle \theta, x_k\rangle - y_k)^2
+	\end{align*}	
+	for example, we need
+	\begin{align*}
+		0\overset!=\nabla\Loss_k(\theta) = 2x_k (\langle \theta, x_k\rangle - y_k)
+	\end{align*}
+	Here
+	\begin{align*}
+		\minimum_k = \frac{y_k}{\|x_k\|^2}x_k
+	\end{align*}
+	does the job.
+\end{example}
+
+\begin{theorem}[Convex Combination of Minima]
+	\label{thm: convex combination of minima}
+	Assuming we can write \(\Loss_k\) in the form \eqref{eq: parabola representation} and
+	\begin{align*}
+		H_{(n)}:=\sum_{k=1}^n H_k
+	\end{align*}
+	is strictly positive definite. Then the minimum of \(\Loss_{(n)}(\theta)\) is a
+	generalized convex combination of the minima of \(\Loss_k(\theta)\). More
+	specifically
+	\begin{align*}
+		\minimum_{(n)} = \sum_{k=1}^n [H_{(n)}^{-1} H_k] \minimum_{k}
+	\end{align*}
+	with
+	\begin{align*}
+		0\preceq H_{(n)}^{-1}H_k\preceq \identity
+		\quad \text{and}\quad
+		\sum_{k=1}^n [H_{(n)}^{-1} H_k] = \identity
+	\end{align*}
+	where \(A\preceq B\) is defined as ``\(B-A\) is positive definite''. Here
+	this also means that all eigenvalues of \(H_{(n)}^{-1}H_k\) are between
+	\(0\) and \(1\).
+\end{theorem}
+\begin{proof}
+	We have \(\Loss_{(n)}\) is strictly convex, so we need
+	\begin{align*}
+		0 \overset!= \nabla\Loss_{(n)}(\theta)
+		=\frac1n \sum_{k=1}^n \nabla\Loss_k(\theta)
+		= \frac1n \sum_{k=1}^n H_k(\theta - \minimum_k)
+	\end{align*}
+	By linearity it follows that
+	\begin{align*}
+		H_{(n)} \minimum_{(n)} = \sum_{k=1}^n H_k \minimum_k,
+	\end{align*}
+	which implies the claim.
+\end{proof}
+
+\begin{corollary}
+	In the same setting as Theorem~\ref{thm: convex combination of minima}, we
+	can also define
+	\begin{align*}
+		\bar{H}_{(n)} := \frac1n\sum_{k=1}^n H_k
+	\end{align*}
+	which might converge, and due to \(H_{(n)}^{-1}H_k = \tfrac1n\bar{H}_{(n)}^{-1}H_k\)
+	we get
+	\begin{align*}
+		\minimum_{(n)} = \frac1n\sum_{k=1}^n [\bar{H}_{(n)}^{-1} H_k] \minimum_{k}.
+	\end{align*}
+\end{corollary}

@@ -53,15 +53,15 @@ condition.
 	We only need to find \(\minimum_k\) for which \(\nabla\Loss_k(\minimum_k)=0\).
 	If we have
 	\begin{align*}
-		\Loss_k(\theta) = (\langle \theta, x_k\rangle - y_k)^2
+		\Loss_k(\theta) = (\langle \theta, X_k\rangle - Y_k)^2
 	\end{align*}	
 	for example, we need
 	\begin{align*}
-		0\overset!=\nabla\Loss_k(\theta) = 2x_k (\langle \theta, x_k\rangle - y_k)
+		0\overset!=\nabla\Loss_k(\theta) = 2X_k (\langle \theta, X_k\rangle - Y_k)
 	\end{align*}
 	Here
 	\begin{align*}
-		\minimum_k = \frac{y_k}{\|x_k\|^2}x_k
+		\minimum_k = \frac{Y_k}{\|X_k\|^2}X_k
 	\end{align*}
 	does the job.
 \end{example}
@@ -111,6 +111,7 @@ condition.
 	which might converge, and due to \(H_{(n)}^{-1}H_k = \tfrac1n\bar{H}_{(n)}^{-1}H_k\)
 	we get
 	\begin{align*}
-		\minimum_{(n)} = \frac1n\sum_{k=1}^n [\bar{H}_{(n)}^{-1} H_k] \minimum_{k}.
+		\minimum_{(n)}
+		= \frac1n\sum_{k=1}^n [\bar{H}_{(n)}^{-1} H_k] \minimum_{k}.
 	\end{align*}
 \end{corollary}

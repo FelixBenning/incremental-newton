@@ -23,7 +23,7 @@ A finite sum would also work. But this is the more interesting case.
 	\begin{align*}
 		\Loss_k(w) := \loss(w, X_k, Y_k).
 	\end{align*}
-	We then get \eqref{eq: loss limit} from the law of large numbers.
+	We then get \eqref{eq: loss limit} almost surely from the law of large numbers.
 \end{example}
 
 \subsection{Tracking Minimas}
@@ -49,15 +49,21 @@ using
 While \(H_k\) strictly positive definite is a sufficient condition for the
 representation \eqref{eq: parabola representation}, it is not a necessary
 condition.
+
+In particular we get
+\begin{align}\label{eq: hessian representation of the gradient}
+	\nabla\Loss_k(\theta) = H_k(\theta - \minimum_k)
+\end{align}
+
 \begin{example}
 	We only need to find \(\minimum_k\) for which \(\nabla\Loss_k(\minimum_k)=0\).
 	If we have
 	\begin{align*}
-		\Loss_k(\theta) = (\langle \theta, X_k\rangle - Y_k)^2
+		\Loss_k(\theta) = \tfrac12(\langle \theta, X_k\rangle - Y_k)^2
 	\end{align*}	
 	for example, we need
 	\begin{align*}
-		0\overset!=\nabla\Loss_k(\theta) = 2X_k (\langle \theta, X_k\rangle - Y_k)
+		0\overset!=\nabla\Loss_k(\theta) = X_k (\langle \theta, X_k\rangle - Y_k)
 	\end{align*}
 	Here
 	\begin{align*}
@@ -106,7 +112,7 @@ condition.
 	In the same setting as Theorem~\ref{thm: convex combination of minima}, we
 	can also define
 	\begin{align*}
-		\bar{H}_{(n)} := \frac1n\sum_{k=1}^n H_k
+		\bar{H}_{(n)} := \frac1n\sum_{k=1}^n H_k = \nabla^2\Loss_{(n)} \to \nabla^2\Loss
 	\end{align*}
 	which might converge, and due to \(H_{(n)}^{-1}H_k = \tfrac1n\bar{H}_{(n)}^{-1}H_k\)
 	we get

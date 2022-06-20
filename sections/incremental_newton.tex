@@ -1,18 +1,38 @@
 \section{Incremental Newton}
 
 \begin{theorem}
+	For quadratic loss functions \(\Loss_k\) we know the following about
+	\(\Loss_{(n)} = \frac1n\sum_{k=1}^n\Loss_k\) and their minima \(\minimum_{(n)}\)
 	\begin{align*}
 		\minimum_{(n+m)}
-		= \minimum_{(n)} - H_{(n+m)}^{-1}\sum_{k=1}^m\nabla\Loss_{n+k}(\minimum_{(n)})
+		&= \minimum_{(n)} - H_{(n+m)}^{-1}\sum_{k=1}^m\nabla\Loss_{n+k}(\minimum_{(n)})\\
+		&= \minimum_{(n)}
+		- \tfrac1{n+m}\bar{H}_{(n+m)}^{-1}\sum_{k=1}^m\nabla\Loss_{n+k}(\minimum_{(n)}).
+	\end{align*}
+	For \(n=0\) we have \(\Loss_{(0)} = 0\) and therefore
+	\(\minimum_{(0)}\) is arbitrary. So we get back the usual Newton method
+	\begin{align*}
+		\minimum_{(m)}
+		= w - \underbrace{\bar{H}_{(m)}^{-1}}_{=\nabla^2\Loss_{(m)}} \underbrace{
+			\frac1m\sum_{k=1}^m\nabla\Loss_k(w)
+		}_{=\nabla\Loss_{(m)}(w)}.
+	\end{align*}
+	To obtain an incremental Newton formula, we can simply select
+	\(m=1\), i.e.
+	\begin{align*}
+		\minimum_{(n+1)}
+		&= \minimum_{(n)} - H_{(n+1)}^{-1}\nabla\Loss_{n+1}(\minimum_{(n)})\\
+		&= \minimum_{(n)} - \tfrac1{n+1}\bar{H}_{(n+1)}^{-1}\nabla\Loss_{n+1}(\minimum_{(n)}).
 	\end{align*}
 \end{theorem}
 \begin{proof}
 	We simply apply Theorem~\ref{thm: convex combination of minima} to get
 	\begin{align*}
 		&\minimum_{(n)} - H_{(n+m)}^{-1}\sum_{k=1}^m\nabla\Loss_{n+k}(\minimum_{(n)})\\
-		&= \minimum_{(n)} - H_{(n+m)}^{-1}\sum_{k=1}^m H_{n+k}(\minimum_{(n)} - \minimum_{n+k} )\\
+		\overset{\eqref{eq: hessian representation of the gradient}}&=
+		\minimum_{(n)} - H_{(n+m)}^{-1}\sum_{k=1}^m H_{n+k}(\minimum_{(n)} - \minimum_{n+k} )\\
 		&= \underbrace{(\identity - H_{(n+m)}^{-1}\sum_{k=1}^m H_{n+k})}_{
-			= H_{(n+m)}^{-1}(H_{(n+m)} - \sum_{k=1}^m H_{n+k})
+			= H_{(n+m)}^{-1}\left(H_{(n+m)} - \sum_{k=1}^m H_{n+k}\right)
 		}\minimum_{(n)} + H_{(n+m)}^{-1}\sum_{k=1}^mH_{n+k}\minimum_{n+k}\\
 		\overset{\text{Thm.~}\ref{thm: convex combination of minima}}&=
 		H_{(n+m)}^{-1} H_{(n)} \sum_{k=1}^m H_{(n)}^{-1}H_k \minimum_k
@@ -23,23 +43,40 @@
 	\end{align*}
 \end{proof}
 
-\begin{corollary}
-	\begin{align*}
-		\minimum_{(n+1)}
-		&= \minimum_{(n)} - H_{(n+1)}^{-1}\nabla\Loss_{n+1}(\minimum_{(n)})\\
-		&= \minimum_{(n)} - \tfrac1{n+1}\bar{H}_{(n+1)}^{-1}\nabla\Loss_{n+1}(\minimum_{(n)})
-	\end{align*}
-\end{corollary}
+\subsection{Interesting Special Cases}
 
-In the case \(\Loss_k(\theta) = \tfrac12(\langle \theta, X_k\rangle - Y_k)^2\)
-we have \(H_k = X_k X_k^T\) and so for \(H_{(n+1)} = H_{(n)} + H_{n+1}\) we
-can use the Sherman-Morrison formula
-\begin{align*}
-	(A + uv)^{-1} = A^{-1} - \frac{A^{-1}uv^T A^{-1}}{1+ v^T A^{-1}u}
-\end{align*}
-to calculate \(H_{(n+1)}^{-1}\).
+\subsubsection{Linear Model}
+
+Consider the case \(\Loss_k(\theta) = \tfrac12(\langle \theta, X_k\rangle - Y_k)^2\)
+where we have \(H_k = X_k X_k^T\)
+
+\begin{example}[Increment Cost]
+	For \(H_{(n+1)} = H_{(n)} + H_{n+1}\) we can use the Sherman-Morrison formula
+	\begin{align*}
+		(A + uv)^{-1} = A^{-1} - \frac{A^{-1}uv^T A^{-1}}{1+ v^T A^{-1}u}
+	\end{align*}
+	to calculate \(H_{(n+1)}^{-1}\).
+\end{example}
+
+\begin{example}[Avoiding Recalculation Entirely]
+	We have already noticed that
+	\begin{align*}
+		\bar{H}_{(n)} = \frac1n\sum_{k=1}^n H_k = \nabla^2\Loss_{(n)}
+		\to \nabla^2\Loss = \E[H_1]=\E[X_1X_1^T]
+	\end{align*}
+	So we could just use the limit in place of the \(\bar{H}_{(n)}\) for large
+	enough \(n\). In other words: At some point we can just stop recalculating
+	\(H_{(n)}\) as our current estimate is good enough.
+\end{example}
 
 \begin{example}[Relation to Gradient Descent]
+	If \(X_1\) is centered and its entries \(X_{1,k}\) are uncorrelated and
+	\(\E[X_{1,k}^2]=\sigma^2\), then \(\E[X_1X_1^T]=\sigma^2\identity\) and
+	the Newton method is the gradient method with learning rate
+	\(\frac{1}{\sigma^2n}\). 
+\end{example}
+
+\begin{example}[Relation to the Mean]
 	For
 	\begin{align}
 		\Loss_k(\theta) = \tfrac12(\theta - Y_k)^2

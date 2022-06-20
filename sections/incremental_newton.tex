@@ -82,7 +82,8 @@ where we have \(H_k = X_k X_k^T\)
 		\Loss_k(\theta) = \tfrac12(\theta - Y_k)^2
 	\end{align}	
 	i.e. \(\Loss(\theta) = \E[(\theta - Y)]\) for \(Y_k, Y\) iid distributed
-	variables, we have \(H_k = \identity\) and therefore we have \(\bar{H}_{(n)}=\identity\)
+	variables, we have \(H_k = 1\) and therefore we have \(\bar{H}_{(n)}=1\).
+	This implies
 	\begin{align*}
 		\minimum_{(n+1)}
 		&= \minimum_{(n)} - \frac1{n+1}\nabla\Loss_{n+1}(\minimum_{(n)})\\

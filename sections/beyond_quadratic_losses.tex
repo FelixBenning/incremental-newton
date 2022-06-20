@@ -1,0 +1,30 @@
+\section{Beyond Quadratic Losses}
+
+A learning rate of order \(O(\frac1n)\) is only useful to average out
+stochasticity but slows other progress down to a logarithmic speed. I.e.
+if we view gradient descent as an euler discretization of the gradient flow
+ODE
+\begin{align*}
+	\dot{w} = \nabla\Loss(w)
+\end{align*}
+then the learning rate is the discretization size and the sum of all learning
+rates is the amount of time the ODE is followed. In the case of learning
+rates of order \(O(\frac1n)\), this is \(O\left(\sum_{k=1}^n \frac1k\right) =
+O(\log(n))\) which is not particularly good. In fact the optimal learning
+rate for gradient descent is constant in a transient phase until we reach an
+area close to the minimum at which point we want to remove the stochasticity
+keeping us away from the minimum and reduce the learning rate with a
+\(O(\frac1n)\) rate\fxnote{citations}.
+
+Since the Newton method converges in one step on quadratic functions, we are
+immediately in the asymptotic setting here, so the learning rate \(\frac1n\)
+is quite sensible. But in a more general setting we probably want to first
+consider
+\begin{align*}
+	w_{n+1} = w_n - \lr \bar{H}_{(n+1)}^{-1} \nabla\Loss_{n+1}(w_n)
+\end{align*}
+with an exponential mean of the hessian
+\begin{align*}
+	\bar{H}_{(n+1)} = \gamma \nabla\Loss_{n+1}(w_n) + (1-\gamma)\bar{H}_{(n)},
+\end{align*}
+to weigh hessians closer to \(w_n\) higher.

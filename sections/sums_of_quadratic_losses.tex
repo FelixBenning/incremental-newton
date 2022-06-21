@@ -114,8 +114,8 @@ In particular we get
 	\begin{align*}
 		\bar{H}_{(n)} := \frac1n\sum_{k=1}^n H_k = \nabla^2\Loss_{(n)} \to \nabla^2\Loss
 	\end{align*}
-	which might converge, and due to \(H_{(n)}^{-1}H_k = \tfrac1n\bar{H}_{(n)}^{-1}H_k\)
-	we get
+	which converges if \(\nabla^2\Loss\) exists, and due to \(H_{(n)}^{-1}H_k =
+	\tfrac1n\bar{H}_{(n)}^{-1}H_k\) we get
 	\begin{align*}
 		\minimum_{(n)}
 		= \frac1n\sum_{k=1}^n [\bar{H}_{(n)}^{-1} H_k] \minimum_{k}.
